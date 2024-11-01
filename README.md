@@ -88,7 +88,7 @@ Terraform will give you information on how to configure your Alexa skill, as wel
 Outputs:
 alexa_skill_configuration = {
   smart_home = {
-    default_endpoint = "<THE ARN OF YOUE LAMBDA FUNCTION>"
+    default_endpoint = "<THE ARN OF YOUR LAMBDA FUNCTION>"
   }
   account_linking = {
     web_authorization_url = "https://<YOUR CLOUDFLARE HA ENDPOINT>/auth/authorize"
@@ -107,3 +107,11 @@ cf_tunnel_install_commands = {
 ```
 
 Configure the values shown in the output in your Alexa Skill under the respective sections, execute the three commands shown on the machine you want to use for `cloudflared` and you're almost done. All that is left is activating your Skill in the Alexa app on your phone.
+
+# Additional Notes
+
+The public endpoint that will be created for Cloudflare will have two access policies. One that is used by your Lambda functions and one meant for accessing the instance in a browser. The browser access will be secured by a OTP, which is sent by mail. You can restrict the web access to your instance to specific mail addresses and/or countries by specifying them in the respective variables in [terraform.tfvars](terraform.tfvars).
+
+The access for your Lambda functions will always be restricted to the region you deploy the functions in. Additionally this access is restricted to services that know your service token, which is also created automatically. To make it more secure, this access token is not part of any output, so it is only known to Terraform and your Lambda function. However if you need it later on, you can get the value from the app configuration in the AWS console. It is stored in `AWS Systems Manager > Parameter Store`.
+
+By default the service token is only valid for one year, so you will have to rotate that token when it expires.
