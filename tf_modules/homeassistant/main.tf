@@ -4,7 +4,7 @@ module "cloudflare" {
   cloudflare_zone       = var.cloudflare.zone
   cloudflare_zone_id    = var.cloudflare.zone_id
   cloudflare_account_id = var.cloudflare.account_id
-  tunnel_name           = homeassistant
+  tunnel_name           = "homeassistant"
 
   idps = {
     otp = {
@@ -86,7 +86,7 @@ module "connector" {
     description       = "Relays Alexa voice commands to homeassistant"
     function_version  = "1.0.0"
     source_dir        = var.connector.lambda_function.source_dir
-    iam_role          = var.iam.name
+    iam_role          = module.iam.iam_role_name
     handler           = "main.lambda_handler"
     runtime           = "python3.9"
     ephemeral_storage = 512
@@ -127,7 +127,7 @@ module "wrapper" {
     description       = "Handles authentication for the Alexa connector"
     function_version  = "1.0.0"
     source_dir        = var.wrapper.lambda_function.source_dir
-    iam_role          = var.iam.name
+    iam_role          = module.iam.iam_role_name
     handler           = "main.lambda_handler"
     runtime           = "python3.9"
     ephemeral_storage = 512
